@@ -1,0 +1,59 @@
+kubeadm setup
+==============
+
+prerequisites:-
+---------------
+2 GB or more of RAM per machine (any less will leave little room for your apps).
+2 CPUs or more.
+ports need to be added.(https://kubernetes.io/docs/reference/networking/ports-and-protocols/)
+
+Control plane
+Protocol	Direction	Port Range	Purpose	Used By
+TCP	Inbound	6443	Kubernetes API server	All
+TCP	Inbound	2379-2380	etcd server client API	kube-apiserver, etcd
+TCP	Inbound	10250	Kubelet API	Self, Control plane
+TCP	Inbound	10259	kube-scheduler	Self
+TCP	Inbound	10257	kube-controller-manager	Self
+
+Worker node(s)
+Protocol	Direction	Port Range	Purpose	Used By
+TCP	Inbound	10250	Kubelet API	Self, Control plane
+TCP	Inbound	10256	kube-proxy	Self, Load balancers
+TCP	Inbound	30000-32767	NodePort Services†	All
+
+
+For master node - create t2.medium server with ubuntu 22.04 and add required ports for this master node for setting up kubeadm.
+
+
+
+=========================
+
+touch container.sh kubeadm.sh kinit.sh calico.yml
+chmod +x *.sh
+
+copy the content of scripts into respective files and run below commands:
+
+./container.sh
+./kubeadm.sh
+
+./kinit.sh ( only on master node)
+
+sudo kubeadm join 172.31.92.161:6443 --token r1z1a2.5lohp2j11vjj1zs9 \
+        --discovery-token-ca-cert-hash sha256:e6f0477f48f09ed8ff69168bf147743892d7cf8ca6bf11b7ee6658b69b4b9a07
+
+
+on worker node -t2.micro and add required ports into sg
+=========================
+
+touch container.sh kubeadm.sh 
+
+chmod +x *
+
+./container.sh
+./kubeadm.sh
+sudo kubeadm join token command ( copy from master node)
+
+sudo kubeadm join 172.31.92.161:6443 --token r1z1a2.5lohp2j11vjj1zs9 \
+        --discovery-token-ca-cert-hash sha256:e6f0477f48f09ed8ff69168bf147743892d7cf8ca6bf11b7ee6658b69b4b9a07
+
+
