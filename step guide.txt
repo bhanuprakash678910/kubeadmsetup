@@ -24,8 +24,6 @@ TCP	Inbound	30000-32767	NodePort Services†	All
 
 For master node - create t2.medium server with ubuntu 22.04 and add required ports for this master node for setting up kubeadm.
 
-
-
 =========================
 
 touch container.sh kubeadm.sh kinit.sh calico.yml
@@ -42,7 +40,7 @@ sudo kubeadm join 172.31.92.161:6443 --token r1z1a2.5lohp2j11vjj1zs9 \
         --discovery-token-ca-cert-hash sha256:e6f0477f48f09ed8ff69168bf147743892d7cf8ca6bf11b7ee6658b69b4b9a07
 
 
-on worker node -t2.micro and add required ports into sg
+on worker node -t3.small and add required ports into sg
 =========================
 
 touch container.sh kubeadm.sh 
@@ -52,6 +50,9 @@ chmod +x *
 ./container.sh
 ./kubeadm.sh
 sudo kubeadm join token command ( copy from master node)
+
+To create new token:
+sudo kubeadm token create --print-join-command 
 
 sudo kubeadm join 172.31.92.161:6443 --token r1z1a2.5lohp2j11vjj1zs9 \
         --discovery-token-ca-cert-hash sha256:e6f0477f48f09ed8ff69168bf147743892d7cf8ca6bf11b7ee6658b69b4b9a07
